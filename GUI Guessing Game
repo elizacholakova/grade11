@@ -60,7 +60,7 @@ public class Main {
         //Quit button
         quitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                frame.dispose(); //Exit the program when the user clicks "Quit"
+                feedbackLabel.setText("The random number was " + randomNumber); //Exit the program when the user clicks "Quit"
             }
         });
 
