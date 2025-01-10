@@ -1,0 +1,180 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+
+class Product {
+    private String name;
+    private double price;
+    private int quantity;
+
+    // Constructor
+    public Product(String name, double price, int quantity) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    // Getter methods
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    // Setter methods
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    // Method to display product details
+    public String displayDetails() {
+        return "Name: " + name + ", Price: $" + price + ", Quantity: " + quantity;
+    }
+}
+
+class Inventory {
+    private ArrayList<Product> products;
+    private static final int MAX_PRODUCTS = 10;  // Maximum number of products allowed
+
+    public Inventory() {
+        products = new ArrayList<>();
+    }
+
+    // Method to add a product to the inventory
+    public String addProduct(String name, double price, int quantity) {
+        if (products.size() < MAX_PRODUCTS) {
+            products.add(new Product(name, price, quantity));
+            return "Product added successfully!";
+        } else {
+            return "Inventory is full, can't add more products.";
+        }
+    }
+
+    // Method to update an existing product by name
+    public String updateProduct(String name, double price, int quantity) {
+        for (Product product : products) {
+            if (product.getName().equalsIgnoreCase(name)) {
+                product.setPrice(price);
+                product.setQuantity(quantity);
+                return "Product updated successfully!";
+            }
+        }
+        return "Product not found!";
+    }
+
+    // Method to display all products
+    public String displayAllProducts() {
+        if (products.isEmpty()) {
+            return "No products in inventory.";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (Product product : products) {
+            sb.append(product.displayDetails()).append("\n");
+        }
+        return sb.toString();
+    }
+}
+
+class InventoryManagerGUI extends JFrame {
+    private Inventory inventory;
+    private JTextField nameField, priceField, quantityField;
+    private JTextArea outputArea;
+
+    public InventoryManagerGUI() {
+        inventory = new Inventory();
+
+        setTitle("Inventory Manager");
+        setSize(500, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new FlowLayout());
+
+        // Create components
+        JLabel nameLabel = new JLabel("Product Name:");
+        JLabel priceLabel = new JLabel("Price:");
+        JLabel quantityLabel = new JLabel("Quantity:");
+
+        nameField = new JTextField(15);
+        priceField = new JTextField(10);
+        quantityField = new JTextField(5);
+
+        JButton addProductButton = new JButton("Add Product");
+        JButton updateProductButton = new JButton("Update Product");
+        JButton displayProductsButton = new JButton("Display Products");
+
+        outputArea = new JTextArea(10, 40);
+        outputArea.setEditable(false);
+
+        // Add components to the frame
+        add(nameLabel);
+        add(nameField);
+        add(priceLabel);
+        add(priceField);
+        add(quantityLabel);
+        add(quantityField);
+        add(addProductButton);
+        add(updateProductButton);
+        add(displayProductsButton);
+        add(new JScrollPane(outputArea));
+
+        // Add button listeners
+        addProductButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = nameField.getText();
+                try {
+                    double price = Double.parseDouble(priceField.getText());
+                    int quantity = Integer.parseInt(quantityField.getText());
+                    String result = inventory.addProduct(name, price, quantity);
+                    outputArea.setText(result);
+                } catch (NumberFormatException ex) {
+                    outputArea.setText("Please enter valid price and quantity values.");
+                }
+            }
+        });
+
+        updateProductButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = nameField.getText();
+                try {
+                    double price = Double.parseDouble(priceField.getText());
+                    int quantity = Integer.parseInt(quantityField.getText());
+                    String result = inventory.updateProduct(name, price, quantity);
+                    outputArea.setText(result);
+                } catch (NumberFormatException ex) {
+                    outputArea.setText("Please enter valid price and quantity values.");
+                }
+            }
+        });
+
+        displayProductsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String result = inventory.displayAllProducts();
+                outputArea.setText(result);
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        // Run the application
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                InventoryManagerGUI frame = new InventoryManagerGUI();
+                frame.setVisible(true);
+            }
+        });
+    }
+}
