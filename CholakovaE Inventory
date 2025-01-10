@@ -1,0 +1,187 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+
+class Product {
+    private String name;
+    private double price;
+    private int quantity;
+
+    // Constructor
+    public Product(String name, double price, int quantity) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    // Getter methods
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    // Setter methods
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    // Method to display product details
+    public String displayDetails() {
+        return "Name: " + name + "\nPrice: $" + price + "\nQuantity: " + quantity+"---------------------------";
+    }
+}
+
+class Inventory {
+    public ArrayList<Product> products;
+    private static final int maxProducts = 3;
+
+    public Inventory() {
+        products = new ArrayList<>();
+    }
+
+    // Method to add a product to the inventory
+    public String addProduct(JTextField name, JTextField price, JTextField quantity) {
+        if (products.size() < maxProducts) {
+            products.add(new Product(name.getText(), Double.parseDouble(price.getText()), Integer.parseInt(quantity.getText())));
+            name.setText("");
+            price.setText("");
+            quantity.setText("");
+            return "Product added successfully!";
+        } else {
+            return "Inventory is full, can't add more products.";
+        }
+    }
+
+    // Method to update an existing product by name
+    public String updateProduct(JTextField name, JTextField price, JTextField quantity) {
+        for (Product product : products) {
+            if (product.getName().equalsIgnoreCase(name.getText())) { //if Apple is written as apple
+                product.setPrice(Double.parseDouble(price.getText()));
+                product.setQuantity(Integer.parseInt(quantity.getText()));
+                name.setText("");
+                price.setText("");
+                quantity.setText("");
+                return "Product updated successfully!";
+            }
+        }
+        return "Product not found!";
+    }
+
+    // Method to display all products
+    public String displayAllProducts() {
+        if (products.isEmpty()) {
+            return "No products in inventory.";
+        }
+        String text=""; //creates an empty String and then adds the name, price, and quantity to it
+        for (Product product : products) {
+            text += "Name: " + product.getName() + "\nPrice: " + product.getPrice() + "\nQuantity: " + product.getQuantity() + "\n------------------------\n";
+        }
+        return text;
+    }
+}
+
+public class InventoryGUI {
+    static Inventory inventory = new Inventory();
+    static JFrame mainPanel = new JFrame("Inventory Manager");
+    static JTextField nameField = new JTextField(15);
+    static JTextField priceField = new JTextField(10);
+    static JTextField quantityField = new JTextField(5);
+
+
+    public static void main(String[] args) {
+
+            mainPanel.setSize(500, 400);
+            mainPanel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            mainPanel.setLayout(new FlowLayout());
+
+            // Create components
+            JLabel nameLabel = new JLabel("Product Name:");
+            JLabel priceLabel = new JLabel("Price:");
+            JLabel quantityLabel = new JLabel("Quantity:");
+
+            JButton addProductButton = new JButton("Add Product");
+            JButton updateProductButton = new JButton("Update Product");
+            JButton displayProductsButton = new JButton("Display Products");
+
+            JTextArea outputArea = new JTextArea(16, 40);
+            outputArea.setEditable(false);
+
+            // Add components to the frame
+            mainPanel.add(nameLabel);
+            mainPanel.add(nameField);
+            mainPanel.add(priceLabel);
+            mainPanel.add(priceField);
+            mainPanel.add(quantityLabel);
+            mainPanel.add(quantityField);
+            mainPanel.add(addProductButton);
+            mainPanel.add(updateProductButton);
+            mainPanel.add(displayProductsButton);
+            mainPanel.add(new JScrollPane(outputArea));
+
+            // Add button listeners
+            addProductButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String name = nameField.getText();
+                    try {
+                        double price = Double.parseDouble(priceField.getText()); //checks whether the values are correct(double, integer)
+                        int quantity = Integer.parseInt(quantityField.getText());
+                        if(price<0) {
+                            outputArea.setText("Price cannot be negative!");
+                        }else {
+                            if(quantity<0) {
+                                outputArea.setText("Quantity cannot be negative!");
+                            }else{
+                                String result = inventory.addProduct(nameField, priceField, quantityField); //text that appears
+                                outputArea.setText(result);
+                            }
+                        }
+                    } catch (NumberFormatException ex) {
+                        outputArea.setText("Please enter valid price and quantity values.");
+                    }
+                }
+            });
+
+            updateProductButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String name = nameField.getText();
+                    try {
+                        double price = Double.parseDouble(priceField.getText());
+                        int quantity = Integer.parseInt(quantityField.getText());
+                        if(price<0) {
+                            outputArea.setText("Price cannot be negative!");
+                        }else {
+                            if(quantity<0) {
+                                outputArea.setText("Quantity cannot be negative!");
+                            }else{
+                                String result = inventory.updateProduct(nameField, priceField, quantityField);
+                                outputArea.setText(result);
+                            }
+                        }
+                    } catch (NumberFormatException ex) {
+                        outputArea.setText("Please enter valid price and quantity values.");
+                    }
+                }
+            });
+
+            displayProductsButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String output = inventory.displayAllProducts();
+                    outputArea.setText(output);
+                }
+            });
+        InventoryGUI frame = new InventoryGUI();
+        mainPanel.setVisible(true);
+    }
+}
