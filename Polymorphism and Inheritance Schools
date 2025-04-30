@@ -1,0 +1,58 @@
+public class Main {
+    public void main(String[] args) {
+
+        School[] schools = {
+                new HighSchool("ACS", 11, 5.50),
+                new HighSchool("AAS", 12, 5.25),
+                new Primary("GCC", 5, 5.70)};
+
+        for (School sc : schools) {
+            System.out.println(sc.displayInfo());
+        }
+    }
+}
+class School {
+        public String school;
+        public int grade;
+        public double average;
+
+        public School(String name, int grade, double average) {
+            this.school = name;
+            this.grade = grade;
+            this.average = average;
+        }
+
+        public String getSchool() {
+            return school;
+        }
+
+        public int getGrade() {
+            return grade;
+        }
+
+        public double getAverage() {
+            return 0.0;
+        }
+    public String displayInfo() {
+        return "";
+    }
+    }
+
+    class HighSchool extends School {
+        public HighSchool(String school, int grade, double average) {
+            super(school, grade, average);
+        }
+        public String displayInfo() {
+            return "School - " + school + "; Grade - " + grade + "; Average - " + average+";";
+        }
+    }
+class Primary extends School {
+    public Primary(String school, int grade, double average) {
+        super(school, grade, average);
+    }
+    public String displayInfo() {
+        return "School - " + school + "; Grade - " + grade + "; Average - " + average+";";
+    }
+}
+
+
