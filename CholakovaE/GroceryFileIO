@@ -1,0 +1,35 @@
+import java.io.*;
+import java.util.Scanner;
+
+public class Main {
+    Scanner scanner = new Scanner(System.in);
+
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the name of the file where your shopping list will be stored: ");
+        String fileName = scanner.nextLine();
+        String path = "home/e.cholakova26/My files/Linux files/"+fileName+".txt";
+        System.out.println("What would you like from the store?\nType \"done\" when you are done adding items");
+
+        try (FileWriter outStream = new FileWriter(fileName, true);
+             PrintWriter writer = new PrintWriter(outStream)) {
+
+            String item;
+            while (true) {
+                item = scanner.nextLine();
+
+                if (item.equalsIgnoreCase("done")) {
+                    break;
+                }
+                writer.println(item);
+            }
+
+            System.out.println("Grocery list saved to " + fileName);
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing to the file: " + e);
+        }
+
+        scanner.close();
+    }
+}
