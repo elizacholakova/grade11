@@ -1,0 +1,87 @@
+import java.io.*;
+import java.util.Scanner;
+import java.util.Random;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner reader = new Scanner(System.in);
+        System.out.print("Enter your name: ");
+        String name = reader.nextLine();
+        FileCreate(name);
+    }
+
+    private static void FileCreate(String name){
+        Scanner reader = new Scanner(System.in);
+        try(FileWriter fw = new FileWriter(name + "-answers.txt", true)){
+            fw.write(name + "-answers\n\n");
+
+            int count = 1;
+            Random random = new Random();
+            int problem = random.nextInt(4);  // FIX: 0 to 3
+
+            while(count <= 5){
+                int i;
+                int j;
+                switch(problem){
+                    case 0:
+                        i = random.nextInt(100);
+                        j = random.nextInt(100);
+                        System.out.print(i + " + " + j + " = ");
+                        int result = reader.nextInt();
+                        if(result == i + j){
+                            fw.write(i + " + " + j + " = " + result + "\nAnswer is correct!\n\n");
+                        } else {
+                            fw.write(i + " + " + j + " = " + result + "\nAnswer is incorrect!\n\n");
+                        }
+                        count++;
+                        break;
+
+                    case 1:
+                        i = random.nextInt(100);
+                        j = random.nextInt(100);
+                        System.out.print(i + " - " + j + " = ");
+                        int result2 = reader.nextInt();
+                        if(result2 == i - j){
+                            fw.write(i + " - " + j + " = " + result2 + "\nAnswer is correct!\n\n");
+                        } else {
+                            fw.write(i + " - " + j + " = " + result2 + "\nAnswer is incorrect!\n\n");
+                        }
+                        count++;
+                        break;
+
+                    case 2:
+                        i = random.nextInt(100);
+                        j = random.nextInt(100);
+                        System.out.print(i + " * " + j + " = ");
+                        int result3 = reader.nextInt();
+                        if(result3 == i * j){
+                            fw.write(i + " * " + j + " = " + result3 + "\nAnswer is correct!\n\n");
+                        } else {
+                            fw.write(i + " * " + j + " = " + result3 + "\nAnswer is incorrect!\n\n");
+                        }
+                        count++;
+                        break;
+
+                    case 3:
+                        i = random.nextInt(100);
+                        j = random.nextInt(1, 10);  // avoid dividing by 0 or too large
+                        System.out.print(i + " / " + j + " = ");
+                        int result4 = reader.nextInt();
+                        if(result4 == i / j){
+                            fw.write(i + " / " + j + " = " + result4 + "\nAnswer is correct!\n\n");
+                        } else {
+                            fw.write(i + " / " + j + " = " + result4 + "\nAnswer is incorrect!\n\n");
+                        }
+                        count++;
+                        break;
+                }
+
+                problem = random.nextInt(4);
+            }
+            System.out.println("Answers saved in " + name + "-answers.txt");
+        }
+        catch(IOException e){
+            System.out.println(e.getMessage());
+        }
+    }
+}
