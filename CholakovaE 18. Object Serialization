@@ -1,0 +1,39 @@
+import java.io.*;
+
+public class Main{
+     public static void main(String[] args) {
+         Emp emp = new Emp("Eli", 20, 5500);
+         emp.WriteS("employee.txt");
+         emp.ReadS("employee.txt");
+     }
+}
+   class Emp implements Serializable {
+    private String name;
+    private int age;
+    private double salary;
+
+    public Emp(String name, int age, double salary) {
+        this.name = name;
+        this.age = age;
+        this.salary = salary;
+    }
+    public void WriteS(String fileName) {
+        try (ObjectOutputStream obj = new ObjectOutputStream((new FileOutputStream(fileName)))) {
+            obj.writeObject(this);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public void ReadS(String fileName) {
+        try(ObjectInputStream obj1= new ObjectInputStream((new FileInputStream(fileName)))) {
+            try {
+                while (true) {
+                    Emp data = (Emp) obj1.readObject();
+                    System.out.println("Employee: " + data.name + " | " + data.age + " | $" + data.salary);
+                }
+            }catch(EOFException e) {}
+        }catch(IOException | ClassNotFoundException e){
+            System.out.println(e.getMessage());
+        }
+        }
+    }
